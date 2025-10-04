@@ -83,6 +83,23 @@
   }, { threshold: 0.6 });
   counters.forEach(c => countersIo.observe(c));
 
+  // Header style on scroll + active nav link
+  const header = $('.site-header');
+  const sections = ['#home','#features','#doctors','#testimonials','#contact'].map(id => document.querySelector(id)).filter(Boolean);
+  const navItems = $$('.nav-links a');
+  function onScrollHeader(){
+    const y = window.scrollY || window.pageYOffset;
+    if (header) header.classList.toggle('is-scrolled', y > 8);
+    const fromTop = y + 100;
+    let activeId = '#home';
+    sections.forEach(sec => {
+      if (sec && sec.offsetTop <= fromTop) activeId = '#' + sec.id;
+    });
+    navItems.forEach(a => a.classList.toggle('active', a.getAttribute('href') === activeId));
+  }
+  window.addEventListener('scroll', onScrollHeader, { passive: true });
+  onScrollHeader();
+
   // Testimonials carousel (fade)
   const track = $('.carousel-track');
   const slides = $$('.testimonial', track);
